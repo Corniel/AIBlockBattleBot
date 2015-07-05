@@ -42,12 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot.cs" />
-    <Compile Include="EngineCommand.cs" />
+    <Compile Include="Commands\BotCommand.cs" />
+    <Compile Include="Commands\EngineCommand.cs" />
+    <Compile Include="Commands\EngineCommandReceiver.cs" />
+    <Compile Include="Commands\GameStateCommand.cs" />
+    <Compile Include="Commands\PlayerCommand.cs" />
+    <Compile Include="Commands\SettingsCommand.cs" />
     <Compile Include="Field.cs" />
     <Compile Include="FieldCell.cs" />
     <Compile Include="FieldCellType.cs" />
     <Compile Include="GameState.cs" />
-    <Compile Include="IEngineCommandReceiver.cs" />
     <Compile Include="MoveType.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="PieceType.cs" />

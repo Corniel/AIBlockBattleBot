@@ -1,8 +1,9 @@
 ﻿using System;
+using AIBlockBattleBot.Commands;
 
 namespace AIBlockBattleBot
 {
-    class PlayerState : IEngineCommandReceiver
+    class PlayerState : EngineCommandReceiver
     {
         public int RowsPoints { get; set; }
         public int Combo { get; set; }
@@ -11,25 +12,25 @@ namespace AIBlockBattleBot
         public PlayerState(int fieldWidth, int fieldHeight)
         {
             Field = new Field(fieldWidth, fieldHeight);
+
+            RouteCommand<PlayerCommand>(ReceiveCommand);
         }
 
-        public void ReceiveCommand(EngineCommand command)
+        public void ReceiveCommand(PlayerCommand command)
         {     
-            var parameters = command.Parameters;
-
-            switch ((string)parameters[0])
+            switch (command.Key)
             {
                 case "row_points":
-                    RowsPoints = int.Parse((string) parameters[1]);
+                    RowsPoints = int.Parse(command.Value);
                     break;
                 case "combo":
-                    Combo = int.Parse((string) parameters[1]);
+                    Combo = int.Parse(command.Value);
                     break;
                 case "field":
-                    Field.Parse((string) parameters[1]);
+                    Field.Parse(command.Value);
                     break;
                 default:
-                    Console.WriteLine("Invalid player state property: {0}", (string)parameters[0]);
+                    Console.WriteLine("Invalid player command: {0}", command.Key);
                     break;
             }
         }

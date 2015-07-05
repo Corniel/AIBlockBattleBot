@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AIBlockBattleBot.Commands;
 
 namespace AIBlockBattleBot
 {
@@ -12,19 +13,17 @@ namespace AIBlockBattleBot
             if (string.IsNullOrWhiteSpace(line))
                 return null;
 
-            IEngineCommandReceiver receiver = null;
-            object[] parameters = null;
+            EngineCommand command = null;
             var parse = line.Split(' ');
             switch (parse[0])
             {
                 case "settings":
-                    receiver = bot.MatchSettings;
-                    parameters = new object[] {parse[1], parse[2]};
+                    command = new SettingsCommand(bot.MatchSettings, parse[1], parse[2]);
                     break;
                 case "update":
                     if (parse[1] == "game")
                     {
-                        receiver = bot.GameState;
+                        command = new GameStateCommand(bot.GameState, parse[2], parse[3]);
                     }
                     else
                     {
@@ -34,27 +33,27 @@ namespace AIBlockBattleBot
                             {
                                 bot.Players.Add(parse[1], new PlayerState(bot.MatchSettings.FieldWidth, bot.MatchSettings.FieldHeight));
                             }
-                            receiver = bot.Players[parse[1]];
+
+                            var player = bot.Players[parse[1]];
+                            command = new PlayerCommand(player, parse[1], parse[2], parse[3]);
                         }
                         else
                         {
                             Console.WriteLine("Invalid player: '{0}'", parse[1]);
                         }
                     }
-                    parameters = new object[] {parse[2], parse[3]};
                     break;
                 case "action":
-                    receiver = bot;
-                    parameters = new object[] { parse[1], parse[2]};
+                    command = new BotCommand(bot, parse[1], parse[2]);
                     break;
             }
 
-            if (receiver == null)
+            if (command == null)
             {
                 Console.WriteLine("Invalid command: '{0}'", parse[0]);
             }
 
-            return new EngineCommand(receiver, parameters);
+            return command;
         }
 
         public void Dispose()

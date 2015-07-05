@@ -1,8 +1,9 @@
 ﻿using System;
+using AIBlockBattleBot.Commands;
 
 namespace AIBlockBattleBot
 {
-    class MatchSettings : IEngineCommandReceiver
+    class MatchSettings : EngineCommandReceiver
     {
         public int MaximumTimeBank { get; private set; }
         public int TimePerMove { get; private set; }
@@ -11,31 +12,35 @@ namespace AIBlockBattleBot
         public int FieldWidth { get; private set; }
         public int FieldHeight { get; private set; }
 
-        public void ReceiveCommand(EngineCommand command)
+        public MatchSettings()
         {
-            var parameters = command.Parameters;
-            switch ((string)parameters[0])
+            RouteCommand<SettingsCommand>(ProcessCommand);
+        }
+
+        public void ProcessCommand(SettingsCommand command)
+        {
+            switch (command.Key)
             {
                 case "time_bank":
-                    MaximumTimeBank = int.Parse((string) parameters[1]);
+                    MaximumTimeBank = int.Parse(command.Value);
                     break;
                 case "time_per_move":
-                    TimePerMove = int.Parse((string) parameters[1]);
+                    TimePerMove = int.Parse(command.Value);
                     break;
                 case "player_names":
-                    PlayerNames = ((string) parameters[1]).Split(',');
+                    PlayerNames = (command.Value).Split(',');
                     break;
                 case "your_bot":
-                    PlayerName = (string) parameters[1];
+                    PlayerName = command.Value;
                     break;
                 case "field_width":
-                    FieldWidth =  int.Parse((string) parameters[1]);
+                    FieldWidth = int.Parse(command.Value);
                     break;
                 case "field_height":
-                    FieldHeight =  int.Parse((string) parameters[1]);
+                    FieldHeight = int.Parse(command.Value);
                     break;
                 default:
-                    Console.WriteLine("Invalid match settings property: {0}", (string)parameters[0]);
+                    Console.WriteLine("Invalid match settings command: {0}", command.Key);
                     break;
             }
         }

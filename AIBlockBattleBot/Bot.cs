@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using AIBlockBattleBot.Commands;
 
 namespace AIBlockBattleBot
 {
-    class Bot : IDisposable, IEngineCommandReceiver
+    class Bot : EngineCommandReceiver, IDisposable
     {
         public MatchSettings MatchSettings { get; private set; }
         public GameState GameState { get; private set; }
@@ -16,6 +17,8 @@ namespace AIBlockBattleBot
             MatchSettings = new MatchSettings();
             GameState = new GameState();
             Players = new Dictionary<string, PlayerState>();
+
+            RouteCommand<BotCommand>(ReceiveCommand);
         }
 
         public void Run()
@@ -32,14 +35,12 @@ namespace AIBlockBattleBot
             }
         }
 
-        public void ReceiveCommand(EngineCommand command)
+        public void ReceiveCommand(BotCommand command)
         {
-            var parameters = command.Parameters;
-
-            switch ((string)parameters[0])
+            switch (command.Key)
             {
                 case "moves":
-                    var moves = MovesForRound(int.Parse((string)parameters[1]));
+                    var moves = MovesForRound(int.Parse(command.Value));
                     if (moves.Length == 0)
                     {
                         Console.WriteLine("no_moves");
@@ -51,7 +52,7 @@ namespace AIBlockBattleBot
                     break;
 
                 default:
-                    Console.WriteLine("Invalid bot action: {0}", (string)parameters[0]);
+                    Console.WriteLine("Invalid bot command: {0}", command.Key);
                     break;
             }
         }
