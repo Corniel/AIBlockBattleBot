@@ -1,0 +1,30 @@
+# Build folders
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+*.pdb
+*.sbr
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+
+# Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+# ReSharper
+_ReSharper*
+
+# NuGet Packages Directory
+packages
